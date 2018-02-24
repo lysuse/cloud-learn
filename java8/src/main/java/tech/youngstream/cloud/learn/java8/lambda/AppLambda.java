@@ -1,13 +1,17 @@
-package tech.youngstream.cloud.learn.java8;
+package tech.youngstream.cloud.learn.java8.lambda;
 
 import tech.youngstream.cloud.learn.java8.model.Person;
 
 import java.util.List;
+import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
-public class RosterTest {
+//lambda表达式学习
+public class AppLambda {
+
 
     //方式1， 通过对比某个特征查找名单列表
     public static void printPersonsOlderThan(List<Person> roster, int age) {
@@ -97,8 +101,8 @@ public class RosterTest {
             Consumer<Y> block) {
         for(X p : source) {
             if (tester.test(p)) {
-               Y data = mapper.apply(p);
-               block.accept(data);
+                Y data = mapper.apply(p);
+                block.accept(data);
             }
         }
     }
@@ -125,8 +129,8 @@ public class RosterTest {
         printPersons(
                 roster,
                 (Person p) -> p.getGender() == Person.Sex.MALE
-                    && p.getAge() >= 18
-                    && p.getAge() <= 25);
+                        && p.getAge() >= 18
+                        && p.getAge() <= 25);
 
         System.out.println();
 
@@ -134,8 +138,8 @@ public class RosterTest {
         printPersonsWithPredicate(
                 roster,
                 p -> p.getGender() == Person.Sex.MALE
-                && p.getAge() >= 18
-                && p.getAge() <= 25);
+                        && p.getAge() >= 18
+                        && p.getAge() <= 25);
 
         System.out.println();
         //方式7 使用lambda表达式贯穿你的程序
@@ -143,8 +147,8 @@ public class RosterTest {
         processPersons(
                 roster,
                 p -> p.getGender() == Person.Sex.MALE
-                    && p.getAge() >= 18
-                    && p.getAge() <= 25,
+                        && p.getAge() >= 18
+                        && p.getAge() <= 25,
                 p -> p.printPerson());
         //2. 未固定匹配后的动作
         processPersonWithFunction(
@@ -169,14 +173,26 @@ public class RosterTest {
         roster
                 .stream()
                 .filter(
-                    p -> p.getGender() == Person.Sex.MALE
-                        && p.getAge() >= 18
-                        && p.getAge() <= 25)
+                        p -> p.getGender() == Person.Sex.MALE
+                                && p.getAge() >= 18
+                                && p.getAge() <= 25)
                 .map(p -> p.getEmailAddress())
                 .forEach(email -> System.out.println(email));
 
+        Random random = new Random();
+        //supplier使用
+        Supplier<Person> personSupplier = () -> roster.get(random.nextInt(roster.size()));
+        System.out.println(personSupplier.get().getAge());
+
+        //Function使用
+        Function<Person, Integer> ageFunction = Person::getAge;
+        System.out.println(ageFunction.apply(personSupplier.get()));
+
+        //Consumer使用
+        Consumer<Person> personConsumer = (Person p) -> System.out.print(p.getAge());
+
+        personConsumer.accept(personSupplier.get());
+
     }
-
-
 
 }

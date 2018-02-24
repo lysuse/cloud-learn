@@ -19,6 +19,9 @@ public class Person {
 
     String emailAddress;
 
+    public Person() {
+    }
+
     Person(String name, LocalDate birthday, Sex gender, String emailAddress) {
         this.name = name;
         this.birthday = birthday;
@@ -97,5 +100,15 @@ public class Person {
         ));
         return roster;
 
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", birthday=" + birthday +
+                ", gender=" + gender +
+                ", emailAddress='" + emailAddress + '\'' +
+                '}';
     }
 }
