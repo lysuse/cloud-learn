@@ -192,6 +192,9 @@ public class AppLambda {
         Consumer<Person> personConsumer = (Person p) -> System.out.print(p.getAge());
 
         personConsumer.accept(personSupplier.get());
+        System.out.println();
+        System.out.println(2 % 4);
+        System.out.println(2 & (4 - 1));
 
     }
 
