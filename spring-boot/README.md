@@ -259,3 +259,164 @@ public class MyBean {
     
     此外，bean还可以实现 org.springframework.boot.ExitCodeGenerator SHI
     
+#### Admin Features
+    
+    程序可以通过指定 spring.application.admin.enabled 属性来开启admin相关的特性。这将暴露SpringApplicationAdminMXBean在MBeanServer平台上。
+    你可以通过这些特性远程管理你的Spring Boot程序。这些特性在服务的包装实现上也比较有用！
+    
+> 由于暴露的MBean同时也暴露了关闭该应用的shutdown方法，请慎重的选择是否开启该特征，
+    
+#### Externalized Configuration 外部化配置
+
+    Spring Boot 外部化你的配置以便让相同的代码可以在不同的环境中允许。你可以使用properties配置文件、YAML文件、环境变量以及命令行参数让配置外部化。
+    属性值可以通过@Value注解注入到你的bean中， 通过Spring的Environment访问，或者通过@ConfigurationProperties绑定到结构化对象上。
+    
+    Spring Boot 使用一个非常特别的PropertySource顺序，目的是让理智压倒一切的价值观。属性按以下顺序加载获取：
+    
+    1. 在你的用户目录（~/.spring-boot-devtools.properties）下的开发者工具配置 Devtools global setting properties
+    2. 在你测试用例上的 @TestPropertySource 注解
+    3. 在你测试用例上的 @SpringBootTest#properties 注解
+    4. 命令行参数
+    5. 从SPRING_APPLICATION_JSON里面获取的配置(inline JSON 嵌入到一个环境变量或者系统属性中)
+    6. ServletConfig 初始化参数（init parameters）
+    7. ServletContext 初始化参数 
+    8. JNDI 属性从 java:comp/env
+    9. Java 系统配置 (System.getProperties())
+    10.系统（OS）环境变量
+    11.一个RandomValuePropertySource 中含有random.*的属性
+    12.在jar包外部的 Profile-specific application properties （application-{profile}.properties 和 YAML 变量）
+    13.在jar包内部的 Profile-specific application properties （application-{profile}.properties 和 YAML 变量）
+    14.在jar包外的应用程序配置（application.properties和YAML变量）
+    15.在jar包内的应用程序配置（application.properties和YAML变量）
+    16.在你的@Configuration类上的@PropertySourtce注解
+    17.默认配置(通过SpringApplication.setDefaultProperties指定)
+    
+#####  配置随机值
+    
+       RandomValuePropertySource在注入随机值是非常有用的，它能够参数整数、长整型数，uuid以及uuid ,如下所示：
+    
+```properties
+my.secret=${random.value}
+my.number=${random.int}
+my.bignumber=${random.long}
+my.uuid=${random.uuid}
+my.number.less.than.ten=${random.int(10)}
+my.number.in.range=${random.int[1024, 65536]}
+
+```
+    random,int*的语法是 OPEN value (,max) CLOSE
+##### 获取命令行配置
+    默认情况下SpringApplication转化任何命令行选项参数(参数以--开始，比如: --server-port=9000)到一个property同事添加它们到Spring 的 Environment。
+    正如上文提到的命令行参数总是优先于其他属性源
+    如果你不想命令行属性被添加到Environment，你可以禁止它们通过调用 SpringApplication.setAddCommandLineProperties(false)
+    
+##### Application Property文件
+
+    SpringApplication 从以下的位置加载 application.properties 文件配置 并将其添加到Environment :
+    
+    1. 当前目录下的 /config 子目录
+    2. 当前目录
+    3. classpath下的/config包
+    4. classpath的根目录
+    
+    改列表是按照优先级高低执行，优先级高德可以覆盖优先级低的配置。
+    
+##### 指定profile配置
+```properties
+spring.profiles.active=XXX
+```
+    还可以通过程序之地ing加载的配置文件
+```java
+SpringApplication.setAdditionalProfiles(...)
+```
+##### 配置中的占位符
+```properties
+app.name=my blog
+app.slogan.desc=welcome to  ${app.name}
+```
+##### 使用YAML 代替properties
+
+YAML:
+```yaml
+spring: 
+    datasource: 
+      url: jdbc:mysql://127.0.0.1/test1
+      username: root
+```
+
+properties:
+```properties
+spring.datasource.url=jdbc:mysql://127.0.0.1/test1
+spring.datasource.username=root
+```
+
+##### 类型安全配置(Type-safe Configuration)
+
+    通过指定配置文件里的配哦之前缀，将配置自动绑定到Bean
+    
+```java
+@ConfigurationProperties(prefix="another")
+@Bean
+public AnotherComponent annotherComponent() {
+    private String name;
+    //...
+    public String getName() {
+        return this.name;
+    }
+    
+    public String setName(String name) {
+        this.name = name;
+    }
+    //...
+}
+```
+
+#### 日志 (Logging) 
+    
+    Spring Boot 使用Commons Logging 在所有内部日志记录，但开放了日志实现的接口。默认提供了Java Util Logging，Log4J2和Logback。日志默认输出是通过console控制台，也可以选择文件输出。
+    
+    默认地，如果你使用“Starters”， Logback用于日志记录。还包括适当的Logback路由，以确保使用Java Util日志记录、Commons Logging、Log4J或SLF4J的依赖库都能正常工作。
+    
+    
+##### 格式化日志
+
+    2018-03-05 10:57:51.112  INFO 45469 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/7.0.52
+    
+    通常日志输出包括以下选项：
+- 日期和时间：毫秒级别精度，可以排序的
+- 日志级别： ERROR，WARN，DEBUG和TRACE
+- 进程ID
+- --- 分隔度来区分实际的日志消息
+- 线程名称：使用方阔号括起来的（可能被截断）
+- Logger名称: 记录日之源的类名(通常缩写)
+- 日志消息
+
+
+    
+ ##### 控制台输出
+ 
+    java -jar myapp.jar --debug 
+    或者 application.propeerties 中 debug=true
+    
+    方便调试
+    
+- 指定控制台输出颜色
+ 
+```properties
+spring.output.ansi.enabled=always|detect|never
+```
+
+
+
+##### 文件输出
+
+    默认Spring Boot日志金通过控制台输出，不会写入到日志文件。可以通过logging.file或者logging.path属性指定日志文本
+    
+```properties
+logging.file=my.log #当前目录下的my.log文件
+logging.path=/var/log #写入spring.log到指定目录
+
+logging.level.root=WARN
+logging.level.org.springframework.web=DEBUG
+logging.level.org.hibernate=ERROR
+```
