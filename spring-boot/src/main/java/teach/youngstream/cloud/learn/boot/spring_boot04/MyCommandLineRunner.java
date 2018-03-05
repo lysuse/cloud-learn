@@ -1,0 +1,12 @@
+package teach.youngstream.cloud.learn.boot.spring_boot04;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MyCommandLineRunner implements CommandLineRunner {
+    @Override
+    public void run(String... args) throws Exception {
+        System.out.println("called command line runner!");
+    }
+}
