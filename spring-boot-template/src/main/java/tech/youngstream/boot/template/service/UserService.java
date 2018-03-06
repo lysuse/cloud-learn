@@ -12,4 +12,6 @@ public interface UserService {
 
     User findById(Long id);
 
+    boolean deleteById(Long id);
+
 }

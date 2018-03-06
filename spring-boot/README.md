@@ -420,3 +420,90 @@ logging.level.root=WARN
 logging.level.org.springframework.web=DEBUG
 logging.level.org.hibernate=ERROR
 ```
+
+#### 开发web应用
+
+    Spring Boot是非常适合web应用开发的，你可以创建一个通过嵌入tomcat、jetty、Undertow或者Netty创建自己包含的http server。大多数web应用使用
+    spring-boot-starter-web 模块起步并快速开始。你也可以选择构建响应式(reactive web applications)的web程序使用spring-boot-starter-webflux模块。
+    
+##### Spring Web MVC Framework
+
+1. Spring MVC Auto-configuration
+    
+    Spring Boot 提供自动注解对Spring MVC 在大多数应用上工作良好。
+        
+    自动注解在Spring默认的上面添加了一下特性：
+    
+- 包含ContentNegotiatingViewResolver 和 BeanNameViewResolver bean
+- 支持静态资源，包括支持webjars
+- 自动注册转换器Converter, GenericConverter和Formatter bean
+- 支持HttpMessageConverters
+- 自动注册MessageCodesResolver
+- 支持静态 index.html
+- 支持自定义 Favicon
+- 自动使用一个 ConfigurableWebBindingInitializer bean
+
+2. HttpMessageConverters
+
+    Spring MVC 使用 HttpMessageConverters接口转换HTTP请求和响应。包含了合理的默认值。比如，objects可以被自动地转化为JSON（使用jackson library） 或者 XML（实现Jackson XML 扩展或者使用JAXB 如果Jackson XML扩展不可用）。
+    默认地，字符串使用UTF-8编码。
+    
+    你可以自定义converters，如下：
+```java
+@Configuration
+public class MyConfiguration {
+    
+    @Bean
+    public HttpMessageConverters converters() {
+        HttpMessageConverters<?> additional = ...
+        HttpMessageConverters<?> another = ...
+        return new HttpMessageConverters(additional, another);
+    }
+}
+
+```
+
+3. 自定义JSON 序列化器以及反序列化器
+
+4. MessageCodesResolver
+
+5. 静态内容（Static Content）
+
+6. Welcome Page
+    Spring Boot 同时提供静态和模板两种欢迎页方式。首先查找index.html 再查找index模板，他被自动用于程序的欢迎页。
+    
+7. 自定义Favicon
+    静态资源目录下的favicon.ico ，再查找classpath根目录下的favicon.ico
+    
+8. 路径匹配和内容协商
+   
+   可以注册额外的媒体类型，如下所示:
+   
+```properties
+spring.mvc.contentnegotiation.media-types.markdown=text/markdown
+```
+   还可以通过请求后缀匹配自动返回不同的media type:
+```properties
+spring.mvc.contentnegotiation.favor-path-extension=true
+```
+   
+9. 可配置的WebBindingInitializer
+
+    Spring MVC 使用一个WebBindingInitializer去初始化一个WebDataBinder对一个特别的请求。如果你可以创建你自己的ConfigurableWebBindingInitializer
+    @Bean， Spring Boot 自动配置Spring MVC使用它。
+    
+10. 模板引擎
+    
+    Spring Boot 支持一下模板引擎：
+- FreeMarker
+- Groovy
+- Thymeleaf
+- Mustache
+
+> 如果可能，请避免使用JSP
+
+    Spring Boot 自动查找 src/main/resources/templates
+    
+11. 错误处理
+
+    

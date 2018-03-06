@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>标题</title>
+</head>
+<body>
+
+<p th:text="'Hello!, '+${name} + '!'">33333</p>
+<a th:href="@{http://www.baidu.com}">绝对路径</a>
+<a th:href="@{/templates/index.html}">相对路径</a>
+<a th:href="@{css/index.css}">content路径，默认访问static下的css文件夹</a>
+</body>
+</html>

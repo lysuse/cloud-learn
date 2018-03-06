@@ -1,20 +1,25 @@
 spring:
   datasource:
-    master:
-      url: jdbc:mysql://127.0.0.1:3306/test
-      username: root
-      password: ly1216045316
-      driver-class-name: com.mysql.jdbc.Driver
-    slave1:
-      url: jdbc:mysql://127.0.0.1:3306/test2
-      username: root
-      password: ly1216045316
-      driver-class-name: com.mysql.jdbc.Driver
-    slave2:
-      url: jdbc:mysql://127.0.0.1:3306/test3
-      username: root
-      password: ly1216045316
-      driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1:3306/boot-template
+    username: root
+    password: ly1216045316
+    driver-class-name: com.mysql.jdbc.Driver
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+#    filters: stat,wall,log4j
+    maxPoolPreparedStatementPerConnectionSize: 20
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+    useGlobalDataSourceStat: true
   jpa:
     hibernate:
       ddl-auto: update

@@ -6,6 +6,8 @@ import tech.youngstream.boot.template.dao.UserRepository;
 import tech.youngstream.boot.template.domain.User;
 import tech.youngstream.boot.template.service.UserService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 @Service
@@ -22,11 +24,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Stream<User> findAll() {
-        return (Stream<User>) userRepository.findAll();
+        List<User> list = new ArrayList<>();
+        userRepository.findAll()
+                .forEach(single ->{list.add(single);});
+        return list.stream();
     }
 
     @Override
     public User findById(Long id) {
-        return null;
+        return userRepository.findById(id).get();
+    }
+
+    @Override
+    public boolean deleteById(Long id) {
+        userRepository.deleteById(id);
+        return true;
     }
 }
