@@ -17,9 +17,7 @@ public class DataSourceConfig {
     @Bean(destroyMethod = "close", initMethod = "init")
     @ConfigurationProperties(prefix = "spring.datasource")
     public DruidDataSource dataSource() throws SQLException {
-        DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setFilters("stat,wall");
-        return dataSource;
+        return new DruidDataSource();
     }
 
     @Bean
@@ -52,6 +50,7 @@ public class DataSourceConfig {
         filterRegistrationBean.addInitParameter("exclusions","*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
         return filterRegistrationBean;
     }
+
 
 
 }

@@ -11,7 +11,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class JsonResult<T> {
 
-    private String code;
+    private long code;
 
     private String msg;
 
@@ -21,14 +21,14 @@ public class JsonResult<T> {
     }
 
     public static <T> JsonResult<T> success(T data) {
-        return new JsonResult<T>(String.valueOf(0),"success", data);
+        return new JsonResult<T>(0,"success", data);
     }
 
-    public static <T> JsonResult<T> fail(String code, String msg) {
+    public static <T> JsonResult<T> fail(long code, String msg) {
         return new JsonResult<T>(code, msg, null);
     }
 
-    public static <T> JsonResult<T> fail(String code, String msg, T data) {
+    public static <T> JsonResult<T> fail(long code, String msg, T data) {
         return new JsonResult<T>(code, msg, data);
     }
 

@@ -19,8 +19,7 @@ public class AppController {
 
     @GetMapping("/rest")
     public RandomProperties rest(String id) {
-        if(StringUtils.isEmpty(id)) {
-            throw new IllegalArgumentException("没有参数！");
+        if(StringUtils.isEmpty(id)) { throw new IllegalArgumentException("没有参数！");
         }
         return randomProperties;
     }

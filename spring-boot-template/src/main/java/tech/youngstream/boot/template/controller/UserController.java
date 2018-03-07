@@ -1,11 +1,14 @@
 package tech.youngstream.boot.template.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tech.youngstream.boot.template.common.JsonResult;
+import tech.youngstream.boot.template.common.PageData;
 import tech.youngstream.boot.template.domain.User;
+import tech.youngstream.boot.template.form.BasePageForm;
 import tech.youngstream.boot.template.service.UserService;
 
 import java.util.List;
@@ -28,7 +31,7 @@ public class UserController {
     @ApiImplicitParam(name = "user", value = "用户详细实体user", required = true, dataType = "User")
     @PostMapping("")
     public JsonResult<User> add(@RequestBody User user) {
-        userService.save(user.getUsername(), user.getPassword());
+        user = userService.save(user.getUsername(), user.getPassword());
         return JsonResult.success(user);
     }
 
@@ -44,6 +47,18 @@ public class UserController {
     @GetMapping("")
     public List<User> list() {
         return userService.findAll().collect(Collectors.toList());
+    }
+
+    @ApiOperation(value = "分页请求数据", notes = "分页加载用户列表")
+    @GetMapping("/pages")
+    public JsonResult<PageData<User>> pages(BasePageForm pageForm) {
+        return userService.pages(pageForm);
+    }
+
+    @ApiOperation(value = "更新数据", notes = "更新用户信息")
+    @PostMapping("/{id}")
+    public JsonResult<User> update(@PathVariable("id") Long id, User user) {
+        return JsonResult.success(userService.update(user));
     }
 
 }
