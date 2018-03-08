@@ -69,4 +69,9 @@ public class UserServiceImpl implements UserService {
         user.setCreatedDate(userRepository.findById(user.getId()).get().getCreatedDate());
         return userRepository.save(user);
     }
+
+    @Override
+    public boolean login(String username, String password) {
+        return userRepository.findByCustomer(username, password) != null;
+    }
 }

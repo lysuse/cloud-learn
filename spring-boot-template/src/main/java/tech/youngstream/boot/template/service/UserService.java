@@ -20,4 +20,6 @@ public interface UserService {
     JsonResult<PageData<User>> pages(BasePageForm pageForm);
 
     User update(User user);
+
+    boolean login(String username, String password);
 }
